@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Soarecostin\\FileVault\\": "src"
+            "SoareCostin\\FileVault\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Soarecostin\\FileVault\\Tests\\": "tests"
+            "SoareCostin\\FileVault\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -44,10 +44,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Soarecostin\\FileVault\\FileVaultServiceProvider"
+                "SoareCostin\\FileVault\\FileVaultServiceProvider"
             ],
             "aliases": {
-                "FileVault": "Soarecostin\\FileVault\\FileVaultFacade"
+                "FileVault": "SoareCostin\\FileVault\\FileVaultFacade"
             }
         }
     }

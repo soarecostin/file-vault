@@ -1,6 +1,6 @@
 <?php
 
-namespace Soarecostin\FileVault\Tests;
+namespace SoareCostin\FileVault\Tests;
 
 use PHPUnit\Framework\TestCase;
 

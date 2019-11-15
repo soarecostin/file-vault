@@ -1,11 +1,11 @@
 <?php
 
-namespace Soarecostin\FileVault;
+namespace SoareCostin\FileVault;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Soarecostin\FileVault\Skeleton\SkeletonClass
+ * @see \SoareCostin\FileVault\Skeleton\SkeletonClass
  */
 class FileVaultFacade extends Facade
 {
