@@ -3,8 +3,8 @@
 namespace SoareCostin\FileVault\Tests;
 
 use FileVault;
-use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Storage;
+use Orchestra\Testbench\TestCase;
 use SoareCostin\FileVault\FileVaultFacade;
 use SoareCostin\FileVault\FileVaultServiceProvider;
 
@@ -20,7 +20,7 @@ class FileVaultTest extends TestCase
     protected function getPackageProviders($app)
     {
         return [
-            FileVaultServiceProvider::class
+            FileVaultServiceProvider::class,
         ];
     }
 
@@ -34,7 +34,7 @@ class FileVaultTest extends TestCase
     protected function getPackageAliases($app)
     {
         return [
-            'FileVault' => FileVaultFacade::class
+            'FileVault' => FileVaultFacade::class,
         ];
     }
 
@@ -48,7 +48,7 @@ class FileVaultTest extends TestCase
     {
         // Set the storage local filesystem
         $app['config']->set('filesystems.disks.local.driver', 'local');
-        $app['config']->set('filesystems.disks.local.root', realpath(__DIR__ . '/../storage/app'));
+        $app['config']->set('filesystems.disks.local.root', realpath(__DIR__.'/../storage/app'));
         $app['config']->set('filesystems.default', 'local');
 
         // Generate and set a random encryption key
@@ -62,7 +62,7 @@ class FileVaultTest extends TestCase
      */
     protected function generateRandomKey()
     {
-        return 'base64:' . base64_encode(
+        return 'base64:'.base64_encode(
             \SoareCostin\FileVault\FileVault::generateKey()
         );
     }
@@ -75,6 +75,7 @@ class FileVaultTest extends TestCase
     protected function generateFile($fileName, $fileSize = 500000)
     {
         $fileContents = random_bytes($fileSize);
+
         return Storage::put($fileName, $fileContents);
     }
 
@@ -109,11 +110,11 @@ class FileVaultTest extends TestCase
     {
         $this->generateFile($fileName = 'file.txt');
 
-        FileVault::encrypt($fileName, "encrypted.enc");
+        FileVault::encrypt($fileName, 'encrypted.enc');
 
         // Test if the encrypted file exists
         $this->assertFileExists(
-            Storage::path("encrypted.enc")
+            Storage::path('encrypted.enc')
         );
     }
 
@@ -234,7 +235,7 @@ class FileVaultTest extends TestCase
     public function tearDown() : void
     {
         // Cleanup the storage dir
-        array_map('unlink', glob(__DIR__ . "/../storage/app/*.*"));
+        array_map('unlink', glob(__DIR__.'/../storage/app/*.*'));
 
         parent::tearDown();
     }

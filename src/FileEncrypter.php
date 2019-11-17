@@ -3,8 +3,8 @@
 namespace SoareCostin\FileVault;
 
 use Exception;
-use RuntimeException;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 class FileEncrypter
 {
@@ -71,11 +71,11 @@ class FileEncrypter
     }
 
     /**
-     * Encrypts the source file and saves the result in a new file
+     * Encrypts the source file and saves the result in a new file.
      *
      * @param string $sourcePath  Path to file that should be encrypted
      * @param string $destPath  File name where the encryped file should be written to.
-     * @return boolean
+     * @return bool
      */
     public function encrypt($sourcePath, $destPath)
     {
@@ -86,7 +86,7 @@ class FileEncrypter
         $iv = openssl_random_pseudo_bytes(16);
         fwrite($fpOut, $iv);
 
-        while (!feof($fpIn)) {
+        while (! feof($fpIn)) {
             $plaintext = fread($fpIn, 16 * self::FILE_ENCRYPTION_BLOCKS);
             $ciphertext = openssl_encrypt($plaintext, $this->cipher, $this->key, OPENSSL_RAW_DATA, $iv);
 
@@ -102,11 +102,11 @@ class FileEncrypter
     }
 
     /**
-     * Decrypts the source file and saves the result in a new file
+     * Decrypts the source file and saves the result in a new file.
      *
      * @param string $sourcePath   Path to file that should be decrypted
      * @param string $destPath  File name where the decryped file should be written to.
-     * @return boolean
+     * @return bool
      */
     public function decrypt($sourcePath, $destPath)
     {
@@ -116,7 +116,7 @@ class FileEncrypter
         // Get the initialzation vector from the beginning of the file
         $iv = fread($fpIn, 16);
 
-        while (!feof($fpIn)) {
+        while (! feof($fpIn)) {
             // We have to read one block more for decrypting than for encrypting because of the initialization vector
             $ciphertext = fread($fpIn, 16 * (self::FILE_ENCRYPTION_BLOCKS + 1));
             $plaintext = openssl_decrypt($ciphertext, $this->cipher, $this->key, OPENSSL_RAW_DATA, $iv);
@@ -135,7 +135,7 @@ class FileEncrypter
     protected function openDestFile($destPath)
     {
         if (($fpOut = fopen($destPath, 'w')) === false) {
-            throw new Exception("Cannot open file for writing");
+            throw new Exception('Cannot open file for writing');
         }
 
         return $fpOut;
@@ -144,7 +144,7 @@ class FileEncrypter
     protected function openSourceFile($sourcePath)
     {
         if (($fpIn = fopen($sourcePath, 'rb')) === false) {
-            throw new Exception("Cannot open file for reading");
+            throw new Exception('Cannot open file for reading');
         }
 
         return $fpIn;
