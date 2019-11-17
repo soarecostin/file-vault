@@ -2,8 +2,8 @@
 
 namespace SoareCostin\FileVault;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class FileVault
 {
@@ -36,7 +36,7 @@ class FileVault
     }
 
     /**
-     * Set the disk where the files are located
+     * Set the disk where the files are located.
      *
      * @param  string  $disk
      * @return $this
@@ -49,7 +49,7 @@ class FileVault
     }
 
     /**
-     * Set the encryption key
+     * Set the encryption key.
      *
      * @param  string  $key
      * @return $this
@@ -115,8 +115,8 @@ class FileVault
     {
         if (is_null($destFile)) {
             $destFile = Str::endsWith($sourceFile, '.enc')
-                        ? Str::replaceLast(".enc", "", $sourceFile)
-                        : $sourceFile . ".dec";
+                        ? Str::replaceLast('.enc', '', $sourceFile)
+                        : $sourceFile.'.dec';
         }
 
         $sourcePath = Storage::disk($this->disk)->path($sourceFile);
