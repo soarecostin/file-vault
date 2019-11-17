@@ -5,7 +5,14 @@ namespace SoareCostin\FileVault;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \SoareCostin\FileVault\Skeleton\SkeletonClass
+ * @method static mixed disk(string $disk)
+ * @method static mixed key(string $key)
+ * @method static mixed encrypt(string $sourceFile, string $destFile = null, $deleteSource = true)
+ * @method static mixed encryptCopy(string $sourceFile, string $destFile = null)
+ * @method static mixed decrypt(string $sourceFile, string $destFile = null, $deleteSource = true)
+ * @method static mixed decryptCopy(string $sourceFile, string $destFile = null)
+ *
+ * @see \SoareCostin\FileVault\FileVault
  */
 class FileVaultFacade extends Facade
 {
