@@ -2,8 +2,8 @@
 
 namespace SoareCostin\FileVault\Tests;
 
-use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Storage;
+use Orchestra\Testbench\TestCase;
 use SoareCostin\FileVault\Facades\FileVault;
 use SoareCostin\FileVault\FileVaultServiceProvider;
 
