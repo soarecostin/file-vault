@@ -217,7 +217,7 @@ class FileVaultTest extends TestCase
     /** @test */
     public function test_it_can_encrypt_and_decrypt_using_a_user_generated_key()
     {
-        $key = \SoareCostin\FileVault\FileVault::generateKey();
+        $key = FileVault::generateKey();
 
         $this->generateFile($fileName = 'file.txt');
 
