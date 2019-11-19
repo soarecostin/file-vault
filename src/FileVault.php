@@ -2,9 +2,8 @@
 
 namespace SoareCostin\FileVault;
 
-use Exception;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class FileVault
 {
@@ -159,7 +158,7 @@ class FileVault
         // Create a new encrypter instance
         $encrypter = new FileEncrypter($this->key, $this->cipher);
 
-        return $encrypter->decrypt($sourcePath, "php://output");
+        return $encrypter->decrypt($sourcePath, 'php://output');
     }
 
     protected function getFilePath($file)
