@@ -10,7 +10,7 @@ class FileEncrypter
 {
     /**
      * Define the number of blocks that should be read from the source file for each chunk.
-     * We chose 255 because on decryption we want to read chunks of 4kb ((255 + 1)*16)
+     * We chose 255 because on decryption we want to read chunks of 4kb ((255 + 1)*16).
      */
     protected const FILE_ENCRYPTION_BLOCKS = 255;
 
@@ -176,7 +176,7 @@ class FileEncrypter
 
     protected function openSourceFile($sourcePath)
     {
-        $context = Str::startsWith($sourcePath, "s3://")
+        $context = Str::startsWith($sourcePath, 's3://')
                 ? stream_context_create(['s3' => ['seekable' => true]])
                 : null;
 
