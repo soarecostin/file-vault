@@ -176,11 +176,9 @@ class FileEncrypter
 
     protected function openSourceFile($sourcePath)
     {
-        $context = Str::startsWith($sourcePath, 's3://')
-                ? stream_context_create(['s3' => ['seekable' => true]])
-                : null;
+        $contextOpts = Str::startsWith($sourcePath, 's3://') ? ['s3' => ['seekable' => true]] : [];
 
-        if (($fpIn = fopen($sourcePath, 'r', false, $context)) === false) {
+        if (($fpIn = fopen($sourcePath, 'r', false, stream_context_create($contextOpts))) === false) {
             throw new Exception('Cannot open file for reading');
         }
 
