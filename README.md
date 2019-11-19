@@ -24,7 +24,7 @@ composer require soarecostin/file-vault
 
 This package will automatically register a facade called `FileVault`.
 
-#### Encrypting a file
+### Encrypting a file
 
 The `encrypt` method will search for a file, encrypt it and save it in the same directory. 
 
@@ -32,23 +32,45 @@ The `encrypt` method will search for a file, encrypt it and save it in the same 
 public function encrypt(string $sourceFile, string $destFile = null, $deleteSource = true)
 ```
 
-Examples:
+#### Examples:
+
+The following example will search for `file.txt` into the `local` disk, save the encrypted file as `file.txt.enc` and delete the original `file.txt`:
+``` php
+FileVault::encrypt("file.txt");
+```
+
+You can also specify a different `disk`, just as you would normally with the Laravel `Storage` facade:
+``` php
+FileVault::disk('s3')->encrypt("file.txt");
+```
+
+The following example will search for `file.txt` into the `local` disk, save the encrypted file as `encrypted.txt` and delete the original `file.txt`:
+``` php
+FileVault::encrypt("file.txt", "encrypted.txt");
+```
+
+The following examples both achive the same results as above, with the only difference that the original file is not deleted:
+``` php
+// save the encrypted copy to file.txt.enc
+FileVault::encryptCopy("file.txt");
+
+// or save the encrypted copy with a different name
+FileVault::encryptCopy("file.txt", "encrypted.txt");
+```
+
+### Decrypting a file
+
+The `decrypt` method will search for a file, decrypt it and save it in the same directory
+
+
+### Streaming a decrypted file
+
+Sometimes you will only want to allow users to download the decrypted file, but you don't need to store the actual decrypted file. For this, you can use the `streamDecrypt` function that will decrypt the file and will write it to the `php://output` stream. You can use the Laravel [`streamDownload` method](https://laravel.com/docs/6.x/responses#file-downloads) (available since 5.6) in order to generate a downloadable response:
 
 ``` php
-// The following example will search for file.txt into the local disk,
-// save the encrypted file as file.txt.enc and delete the original file.txt
-FileVault::encrypt("file.txt");
-
-// The following example will search for file.txt into the local disk, 
-// save the encrypted file as encrypted.txt and delete the original file.txt
-FileVault::encrypt("file.txt", "encrypted.txt");
-
-// The following examples all achive the same thing as above, 
-// with the difference that the original file is preserved
-FileVault::encrypt("file.txt", null, false);
-FileVault::encrypt("file.txt", "encrypted.txt", false);
-FileVault::encryptCopy("file.txt");
-FileVault::encryptCopy("file.txt", "encrypted.txt");
+return response()->streamDownload(function () {
+    FileVault::streamDecrypt('file.txt')
+}, 'laravel-readme.md');
 ```
 
 ## Testing
