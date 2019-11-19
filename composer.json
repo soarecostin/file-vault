@@ -2,8 +2,8 @@
     "name": "soarecostin/file-vault",
     "description": "",
     "keywords": [
-        "soarecostin",
-        "file-vault"
+        "laravel", "encrypt", "decrypt", "encryption", "decryption",
+        "cbc", "php", "file", "file-vault"
     ],
     "homepage": "https://github.com/soarecostin/file-vault",
     "license": "MIT",
