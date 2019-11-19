@@ -22,46 +22,123 @@ composer require soarecostin/file-vault
 
 ## Usage
 
-This package will automatically register a facade called `FileVault`.
+This package will automatically register a facade called `FileVault`. The `FileVault` facade is using the Laravel `Storage` and will allow you to specify a `disk`, just as you would normally do when working with Laravel Storage. All file names/paths that you will have to pass into the package encrypt/decrypt functions are relative to the disk root folder. By default, the `local` disk is used, but you can either specify a different disk each time you call one of `FileVault` methods, or you can set the default disk to something else, by publishing this package's config file.
+
+If you want to change the default `disk` or change the `key`/`cipher` used for encryption, you can publish the config file:
+
+```
+php artisan vendor:publish --provider="SoareCostin\FileVault\FileVaultServiceProvider"
+```
+
+This is the contents of the published file:
+``` php
+return [
+    /*
+     * The default key used for all file encryption / decryption
+     * This package will look for a FILE_VAULT_KEY in your env file
+     * If no FILE_VAULT_KEY is found, then it will use your Laravel APP_KEY
+     */
+    'key' => env('FILE_VAULT_KEY', env('APP_KEY')),
+
+    /*
+     * The cipher used for encryption.
+     * Supported options are AES-128-CBC and AES-256-CBC
+     */
+    'cipher' => 'AES-256-CBC',
+
+    /*
+     * The Storage disk used by default to locate your files.
+     */
+    'disk' => 'local',
+];
+```
+
 
 ### Encrypting a file
 
-The `encrypt` method will search for a file, encrypt it and save it in the same directory. 
+The `encrypt` method will search for a file, encrypt it and save it in the same directory, while deleting the original file.
 
 ``` php
 public function encrypt(string $sourceFile, string $destFile = null, $deleteSource = true)
 ```
 
+The `encryptCopy` method will search for a file, encrypt it and save it in the same directory, while preserving the original file.
+
+``` php
+public function encryptCopy(string $sourceFile, string $destFile = null)
+```
+
+
 #### Examples:
 
 The following example will search for `file.txt` into the `local` disk, save the encrypted file as `file.txt.enc` and delete the original `file.txt`:
 ``` php
-FileVault::encrypt("file.txt");
+FileVault::encrypt('file.txt');
 ```
 
 You can also specify a different `disk`, just as you would normally with the Laravel `Storage` facade:
 ``` php
-FileVault::disk('s3')->encrypt("file.txt");
+FileVault::disk('s3')->encrypt('file.txt');
 ```
 
-The following example will search for `file.txt` into the `local` disk, save the encrypted file as `encrypted.txt` and delete the original `file.txt`:
+You can also specify a different name for the encrypted file by passing in a second parameter. The following example will search for `file.txt` into the `local` disk, save the encrypted file as `encrypted.txt` and delete the original `file.txt`:
 ``` php
-FileVault::encrypt("file.txt", "encrypted.txt");
+FileVault::encrypt('file.txt', 'encrypted.txt');
 ```
 
 The following examples both achive the same results as above, with the only difference that the original file is not deleted:
 ``` php
 // save the encrypted copy to file.txt.enc
-FileVault::encryptCopy("file.txt");
+FileVault::encryptCopy('file.txt');
 
 // or save the encrypted copy with a different name
-FileVault::encryptCopy("file.txt", "encrypted.txt");
+FileVault::encryptCopy('file.txt', 'encrypted.txt');
 ```
 
 ### Decrypting a file
 
-The `decrypt` method will search for a file, decrypt it and save it in the same directory
+The `decrypt` method will search for a file, decrypt it and save it in the same directory, while deleting the encrypted file.
 
+``` php
+public function decrypt(string $sourceFile, string $destFile = null, $deleteSource = true)
+```
+
+The `decryptCopy` method will search for a file, decrypt it and save it in the same directory, while preserving the encrypted file.
+
+``` php
+public function decryptCopy(string $sourceFile, string $destFile = null)
+```
+
+#### Examples:
+
+The following example will search for `file.txt.enc` into the `local` disk, save the decrypted file as `file.txt` and delete the encrypted file `file.txt.enc`:
+``` php
+FileVault::decrypt('file.txt.enc');
+```
+
+If the file that needs to be decrypted doesn't end with the `.enc` extension, the decrypted file will have the `.dec` extention. The following example will search for `encrypted.txt` into the `local` disk, save the decrypted file as `encrypted.txt.dec` and delete the encrypted file `encrypted.txt`:
+``` php
+FileVault::decrypt('encrypted.txt');
+```
+
+As with the encryption, you can also specify a different `disk`, just as you would normally with the Laravel `Storage` facade:
+``` php
+FileVault::disk('s3')->decrypt('file.txt.enc');
+```
+
+You can also specify a different name for the decrypted file by passing in a second parameter. The following example will search for `encrypted.txt` into the `local` disk, save the decrypted file as `decrypted.txt` and delete the original `encrypted.txt`:
+``` php
+FileVault::decrypt('encrypted.txt', 'decrypted.txt');
+```
+
+The following examples both achive the same results as above, with the only difference that the original (encrypted) file is not deleted:
+``` php
+// save the decrypted copy to file.txt while preserving file.txt.enc
+FileVault::decryptCopy('file.txt.enc');
+
+// or save the decrypted copy with a different name, while preserving the file.txt.enc
+FileVault::decryptCopy('file.txt.enc', 'decrypted.txt');
+```
 
 ### Streaming a decrypted file
 
@@ -71,6 +148,22 @@ Sometimes you will only want to allow users to download the decrypted file, but 
 return response()->streamDownload(function () {
     FileVault::streamDecrypt('file.txt')
 }, 'laravel-readme.md');
+```
+
+### Using a different key for each file
+
+You may need to use different keys to encrypt your files. You can explicitly specify the key used for encryption using the `key` method.
+
+``` php
+FileVault::key($encryptionKey)->encrypt('file.txt');
+```
+
+Please note that the encryption key must be 16 bytes long for the `AES-128-CBC` cipher and 32 bytes long for the `AES-256-CBC` cipher.
+
+You can generate a key with the correct length (based on the cipher specified in the config file) by using the `generateKey` method:
+
+``` php
+$encryptionKey = FileVault::generateKey();
 ```
 
 ## Testing
