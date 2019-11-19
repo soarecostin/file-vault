@@ -1,6 +1,6 @@
 <?php
 
-namespace SoareCostin\FileVault;
+namespace SoareCostin\FileVault\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Facade;
  *
  * @see \SoareCostin\FileVault\FileVault
  */
-class FileVaultFacade extends Facade
+class FileVault extends Facade
 {
     /**
      * Get the registered name of the component.

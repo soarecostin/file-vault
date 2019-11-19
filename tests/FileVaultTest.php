@@ -2,10 +2,9 @@
 
 namespace SoareCostin\FileVault\Tests;
 
-use FileVault;
-use Illuminate\Support\Facades\Storage;
 use Orchestra\Testbench\TestCase;
-use SoareCostin\FileVault\FileVaultFacade;
+use Illuminate\Support\Facades\Storage;
+use SoareCostin\FileVault\Facades\FileVault;
 use SoareCostin\FileVault\FileVaultServiceProvider;
 
 class FileVaultTest extends TestCase
@@ -34,7 +33,7 @@ class FileVaultTest extends TestCase
     protected function getPackageAliases($app)
     {
         return [
-            'FileVault' => FileVaultFacade::class,
+            'FileVault' => FileVault::class,
         ];
     }
 

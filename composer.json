@@ -47,7 +47,7 @@
                 "SoareCostin\\FileVault\\FileVaultServiceProvider"
             ],
             "aliases": {
-                "FileVault": "SoareCostin\\FileVault\\FileVaultFacade"
+                "FileVault": "SoareCostin\\FileVault\\Facades\\FileVault"
             }
         }
     }
