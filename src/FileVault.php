@@ -2,8 +2,9 @@
 
 namespace SoareCostin\FileVault;
 
-use Illuminate\Support\Facades\Storage;
+use Exception;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class FileVault
 {
@@ -27,6 +28,13 @@ class FileVault
      * @var string
      */
     protected $cipher;
+
+    /**
+     * The storage adapter.
+     *
+     * @var string
+     */
+    protected $adapter;
 
     public function __construct()
     {
@@ -80,12 +88,14 @@ class FileVault
      */
     public function encrypt($sourceFile, $destFile = null, $deleteSource = true)
     {
+        $this->registerServices();
+
         if (is_null($destFile)) {
             $destFile = "{$sourceFile}.enc";
         }
 
-        $sourcePath = Storage::disk($this->disk)->path($sourceFile);
-        $destPath = Storage::disk($this->disk)->path($destFile);
+        $sourcePath = $this->getFilePath($sourceFile);
+        $destPath = $this->getFilePath($destFile);
 
         // Create a new encrypter instance
         $encrypter = new FileEncrypter($this->key, $this->cipher);
@@ -113,14 +123,16 @@ class FileVault
      */
     public function decrypt($sourceFile, $destFile = null, $deleteSource = true)
     {
+        $this->registerServices();
+
         if (is_null($destFile)) {
             $destFile = Str::endsWith($sourceFile, '.enc')
                         ? Str::replaceLast('.enc', '', $sourceFile)
                         : $sourceFile.'.dec';
         }
 
-        $sourcePath = Storage::disk($this->disk)->path($sourceFile);
-        $destPath = Storage::disk($this->disk)->path($destFile);
+        $sourcePath = $this->getFilePath($sourceFile);
+        $destPath = $this->getFilePath($destFile);
 
         // Create a new encrypter instance
         $encrypter = new FileEncrypter($this->key, $this->cipher);
@@ -136,5 +148,50 @@ class FileVault
     public function decryptCopy($sourceFile, $destFile = null)
     {
         return self::decrypt($sourceFile, $destFile, false);
+    }
+
+    public function streamDecrypt($sourceFile)
+    {
+        $this->registerServices();
+
+        $sourcePath = $this->getFilePath($sourceFile);
+
+        // Create a new encrypter instance
+        $encrypter = new FileEncrypter($this->key, $this->cipher);
+
+        return $encrypter->decrypt($sourcePath, "php://output");
+    }
+
+    protected function getFilePath($file)
+    {
+        if ($this->isS3File()) {
+            return "s3://{$this->adapter->getBucket()}/{$file}";
+        }
+
+        return Storage::disk($this->disk)->path($file);
+    }
+
+    protected function isS3File()
+    {
+        return $this->disk == 's3';
+    }
+
+    protected function setAdapter()
+    {
+        if ($this->adapter) {
+            return;
+        }
+
+        $this->adapter = Storage::disk($this->disk)->getAdapter();
+    }
+
+    protected function registerServices()
+    {
+        $this->setAdapter();
+
+        if ($this->isS3File()) {
+            $client = $this->adapter->getClient();
+            $client->registerStreamWrapper();
+        }
     }
 }

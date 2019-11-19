@@ -232,6 +232,25 @@ class FileVaultTest extends TestCase
         );
     }
 
+    /** @test */
+    public function test_it_can_stream_a_decrypted_file()
+    {
+        $this->generateFile($fileName = 'file.txt');
+
+        FileVault::encryptCopy($fileName);
+
+        ob_start();
+        FileVault::streamDecrypt("{$fileName}.enc");
+        $phpOutput = ob_get_contents();
+        ob_end_clean();
+
+        // Test to see if the decrypted content is sent to php://output
+        $this->assertEquals(
+            Storage::get($fileName),
+            $phpOutput
+        );
+    }
+
     public function tearDown() : void
     {
         // Cleanup the storage dir
