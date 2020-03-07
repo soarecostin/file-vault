@@ -250,7 +250,7 @@ class FileVaultTest extends TestCase
         );
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         // Cleanup the storage dir
         array_map('unlink', glob(__DIR__.'/../storage/app/*.*'));
