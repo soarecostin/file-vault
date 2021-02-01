@@ -28,7 +28,11 @@ class FileVaultServiceProvider extends ServiceProvider
 
         // Register the main class to use with the facade
         $this->app->singleton('file-vault', function () {
-            return new FileVault;
+            return new FileVault(
+                config('file-vault.disk'),
+                config('file-vault.key'),
+                config('file-vault.cipher')
+            );
         });
     }
 }

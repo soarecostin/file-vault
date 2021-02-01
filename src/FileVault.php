@@ -35,11 +35,17 @@ class FileVault
      */
     protected $adapter;
 
-    public function __construct()
+    /**
+     * FileVault constructor.
+     * @param string $disk disk name
+     * @param string $key key
+     * @param string $cipher cipher
+     */
+    public function __construct($disk, $key, $cipher)
     {
-        $this->disk = config('file-vault.disk');
-        $this->key = config('file-vault.key');
-        $this->cipher = config('file-vault.cipher');
+        $this->disk = $disk;
+        $this->key = $key;
+        $this->cipher = $cipher;
     }
 
     /**
