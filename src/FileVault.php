@@ -172,7 +172,7 @@ class FileVault
 
     protected function isS3File()
     {
-        return $this->disk == 's3';
+        return $this->disk instanceof AwsS3Adapter;
     }
 
     protected function setAdapter()
