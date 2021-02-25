@@ -172,7 +172,7 @@ class FileVault
 
     protected function isS3File()
     {
-        return ($this->adapter instanceof AwsS3Adapter);
+        return ($this->adapter instanceof \League\Flysystem\AwsS3v3\AwsS3Adapter);
     }
 
     protected function setAdapter()
