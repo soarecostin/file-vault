@@ -31,7 +31,7 @@ class FileVault
     /**
      * The storage adapter.
      *
-     * @var string
+     * @var AdapterInterface
      */
     protected $adapter;
 
@@ -172,15 +172,11 @@ class FileVault
 
     protected function isS3File()
     {
-        return $this->disk == 's3';
+        return $this->adapter instanceof \League\Flysystem\AwsS3v3\AwsS3Adapter;
     }
 
     protected function setAdapter()
     {
-        if ($this->adapter) {
-            return;
-        }
-
         $this->adapter = Storage::disk($this->disk)->getAdapter();
     }
 
