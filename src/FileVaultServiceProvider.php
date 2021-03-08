@@ -13,7 +13,7 @@ class FileVaultServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('file-vault.php'),
+                __DIR__.'/../config/config.php' => app()->configPath('file-vault.php'),
             ], 'file-vault-config');
         }
     }
