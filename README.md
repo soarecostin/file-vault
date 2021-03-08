@@ -20,6 +20,13 @@ You can install the package via composer:
 composer require soarecostin/file-vault
 ```
 
+To use the package in Lumen, add the following entries to your `bootstrap/app.php` boot file just above where the application routes are loaded:
+
+```bash
+$app->register(SoareCostin\FileVault\FileVaultServiceProvider::class);
+$app->configure('file-vault');
+```
+
 ## Usage
 
 ### Tutorials
