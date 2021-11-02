@@ -85,20 +85,25 @@ class FileEncrypter
         $iv = openssl_random_pseudo_bytes(16);
         fwrite($fpOut, $iv);
 
-        $numberOfChunks = ceil(filesize($sourcePath) / (16 * self::FILE_ENCRYPTION_BLOCKS));
+        $fileSize = filesize($sourcePath);
+        $chunkSize = 16 * self::FILE_ENCRYPTION_BLOCKS;
+
+        $numberOfChunks = ceil($fileSize / $chunkSize);
 
         $i = 0;
         while (! feof($fpIn)) {
-            $plaintext = fread($fpIn, 16 * self::FILE_ENCRYPTION_BLOCKS);
+            $plaintext = fread($fpIn, $chunkSize);
             $ciphertext = openssl_encrypt($plaintext, $this->cipher, $this->key, OPENSSL_RAW_DATA, $iv);
 
             // Because Amazon S3 will randomly return smaller sized chunks:
             // Check if the size read from the stream is different than the requested chunk size
-            // In this scenario, request the chunk again, unless this is the last chunk
-            if (strlen($plaintext) !== 16 * self::FILE_ENCRYPTION_BLOCKS
-                && $i + 1 < $numberOfChunks
+            // or, in case of the last chunk, if the total file size is different from the received size
+            // In this scenario, request the chunk again
+            if (
+                ($i + 1 < $numberOfChunks && strlen($plaintext) !== $chunkSize)
+                || ($i + 1 === $numberOfChunks && $fileSize !== strlen($plaintext) + $chunkSize * $i)
             ) {
-                fseek($fpIn, 16 * self::FILE_ENCRYPTION_BLOCKS * $i);
+                fseek($fpIn, $chunkSize * $i);
                 continue;
             }
 
@@ -130,19 +135,24 @@ class FileEncrypter
         // Get the initialzation vector from the beginning of the file
         $iv = fread($fpIn, 16);
 
-        $numberOfChunks = ceil((filesize($sourcePath) - 16) / (16 * (self::FILE_ENCRYPTION_BLOCKS + 1)));
+        $fileSize = filesize($sourcePath) - 16;
+        $chunkSize = 16 * (self::FILE_ENCRYPTION_BLOCKS + 1);
+
+        $numberOfChunks = ceil(($fileSize) / $chunkSize);
 
         $i = 0;
         while (! feof($fpIn)) {
             // We have to read one block more for decrypting than for encrypting because of the initialization vector
-            $ciphertext = fread($fpIn, 16 * (self::FILE_ENCRYPTION_BLOCKS + 1));
+            $ciphertext = fread($fpIn, $chunkSize);
             $plaintext = openssl_decrypt($ciphertext, $this->cipher, $this->key, OPENSSL_RAW_DATA, $iv);
 
             // Because Amazon S3 will randomly return smaller sized chunks:
             // Check if the size read from the stream is different than the requested chunk size
-            // In this scenario, request the chunk again, unless this is the last chunk
-            if (strlen($ciphertext) !== 16 * (self::FILE_ENCRYPTION_BLOCKS + 1)
-                && $i + 1 < $numberOfChunks
+            // or, in case of the last chunk, if the total file size is different from the received size
+            // In this scenario, request the chunk again
+            if (
+                ($i + 1 < $numberOfChunks && strlen($ciphertext) !== $chunkSize)
+                || ($i + 1 === $numberOfChunks && $fileSize !== strlen($ciphertext) + $chunkSize * $i)
             ) {
                 fseek($fpIn, 16 + 16 * (self::FILE_ENCRYPTION_BLOCKS + 1) * $i);
                 continue;
