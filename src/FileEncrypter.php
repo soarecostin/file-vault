@@ -101,7 +101,7 @@ class FileEncrypter
             // In this scenario, request the chunk again
             if (
                 ($i + 1 < $numberOfChunks && strlen($plaintext) !== $chunkSize)
-                || ($i + 1 === $numberOfChunks && $fileSize !== strlen($plaintext) + $chunkSize * $i)
+                || ($i + 1 == $numberOfChunks && $fileSize !== strlen($plaintext) + $chunkSize * $i)
             ) {
                 fseek($fpIn, $chunkSize * $i);
                 continue;
@@ -152,7 +152,7 @@ class FileEncrypter
             // In this scenario, request the chunk again
             if (
                 ($i + 1 < $numberOfChunks && strlen($ciphertext) !== $chunkSize)
-                || ($i + 1 === $numberOfChunks && $fileSize !== strlen($ciphertext) + $chunkSize * $i)
+                || ($i + 1 == $numberOfChunks && $fileSize !== strlen($ciphertext) + $chunkSize * $i)
             ) {
                 fseek($fpIn, 16 + 16 * (self::FILE_ENCRYPTION_BLOCKS + 1) * $i);
                 continue;
