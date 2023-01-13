@@ -164,7 +164,7 @@ class FileVault
     protected function getFilePath($file)
     {
         if ($this->isS3File()) {
-            return "s3://{$this->adapter->getBucket()}/{$file}";
+            return "s3://{$this->getBucket()}/{$file}";
         }
 
         return Storage::disk($this->disk)->path($file);
@@ -173,6 +173,11 @@ class FileVault
     protected function isS3File()
     {
         return $this->disk == 's3';
+    }
+
+    protected function getBucket()
+    {
+        return config('filesystems.disks.s3.bucket');
     }
 
     protected function setAdapter()
@@ -189,7 +194,17 @@ class FileVault
         $this->setAdapter();
 
         if ($this->isS3File()) {
-            $client = $this->adapter->getClient();
+
+            $adapter = $this->adapter;
+
+            if (is_a($adapter, 'League\Flysystem\AwsS3V3\AwsS3V3Adapter')) {
+                // Flysystem v3 changed the way to retrieve the client
+                $client = Storage::disk($this->disk)->getClient();
+            } else {
+                $client = $this->adapter->getClient();
+
+            }
+
             $client->registerStreamWrapper();
         }
     }
