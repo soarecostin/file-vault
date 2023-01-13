@@ -1,5 +1,5 @@
 {
-    "name": "soarecostin/file-vault",
+    "name": "tiknil/file-vault",
     "description": "",
     "keywords": [
         "laravel",
@@ -12,14 +12,19 @@
         "file",
         "file-vault"
     ],
-    "homepage": "https://github.com/soarecostin/file-vault",
+    "homepage": "https://github.com/tiknil/file-vault",
     "license": "MIT",
     "type": "library",
     "authors": [
         {
             "name": "Costin Soare",
             "email": "soarecostin@gmail.com",
-            "role": "Developer"
+            "role": "Original Developer"
+        },
+        {
+            "name": "Giorgio Balduzzi",
+            "email": "balduzzi.giorgio@tiknil.com",
+            "role": "Fork Developer"
         }
     ],
     "require": {
@@ -32,12 +37,12 @@
     },
     "autoload": {
         "psr-4": {
-            "SoareCostin\\FileVault\\": "src"
+            "Tiknil\\FileVault\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "SoareCostin\\FileVault\\Tests\\": "tests"
+            "Tiknil\\FileVault\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -50,10 +55,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "SoareCostin\\FileVault\\FileVaultServiceProvider"
+                "Tiknil\\FileVault\\FileVaultServiceProvider"
             ],
             "aliases": {
-                "FileVault": "SoareCostin\\FileVault\\Facades\\FileVault"
+                "FileVault": "Tiknil\\FileVault\\Facades\\FileVault"
             }
         }
     }

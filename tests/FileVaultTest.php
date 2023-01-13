@@ -1,11 +1,11 @@
 <?php
 
-namespace SoareCostin\FileVault\Tests;
+namespace Tiknil\FileVault\Tests;
 
 use Illuminate\Support\Facades\Storage;
 use Orchestra\Testbench\TestCase;
-use SoareCostin\FileVault\Facades\FileVault;
-use SoareCostin\FileVault\FileVaultServiceProvider;
+use Tiknil\FileVault\Facades\FileVault;
+use Tiknil\FileVault\FileVaultServiceProvider;
 
 class FileVaultTest extends TestCase
 {

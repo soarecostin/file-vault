@@ -1,6 +1,6 @@
 <?php
 
-namespace SoareCostin\FileVault;
+namespace Tiknil\FileVault;
 
 use Exception;
 use Illuminate\Support\Str;

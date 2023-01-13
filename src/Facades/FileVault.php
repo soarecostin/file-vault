@@ -1,6 +1,6 @@
 <?php
 
-namespace SoareCostin\FileVault\Facades;
+namespace Tiknil\FileVault\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static mixed decrypt(string $sourceFile, string $destFile = null, $deleteSource = true)
  * @method static mixed decryptCopy(string $sourceFile, string $destFile = null)
  *
- * @see \SoareCostin\FileVault\FileVault
+ * @see \Tiknil\FileVault\FileVault
  */
 class FileVault extends Facade
 {
