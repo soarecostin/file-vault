@@ -81,8 +81,8 @@ class FileVault
     /**
      * Encrypt the passed file and saves the result in a new file with ".enc" as suffix.
      *
-     * @param string $sourceFile Path to file that should be encrypted, relative to the storage disk specified
-     * @param string $destFile   File name where the encryped file should be written to, relative to the storage disk specified
+     * @param  string  $sourceFile  Path to file that should be encrypted, relative to the storage disk specified
+     * @param  string  $destFile  File name where the encrypted file should be written to, relative to the storage disk specified
      * @return $this
      */
     public function encrypt($sourceFile, $destFile = null, $deleteSource = true)
@@ -113,11 +113,11 @@ class FileVault
     }
 
     /**
-     * Dencrypt the passed file and saves the result in a new file, removing the
+     * Decrypt the passed file and saves the result in a new file, removing the
      * last 4 characters from file name.
      *
-     * @param string $sourceFile Path to file that should be decrypted
-     * @param string $destFile   File name where the decryped file should be written to.
+     * @param  string  $sourceFile  Path to file that should be decrypted
+     * @param  string  $destFile  File name where the decrypted file should be written to.
      * @return $this
      */
     public function decrypt($sourceFile, $destFile = null, $deleteSource = true)

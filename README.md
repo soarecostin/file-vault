@@ -12,7 +12,7 @@ With this package, you can encrypt and decrypt files of any size in your Laravel
 
 ## Installation and usage
 
-This package requires PHP 7.2 and Laravel 5.8 or higher.  
+This package requires PHP 8.4 and Laravel 12.
 
 You can install the package via composer:
 
