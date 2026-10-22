@@ -28,13 +28,6 @@ class FileVault
      */
     protected $cipher;
 
-    /**
-     * The storage adapter.
-     *
-     * @var string
-     */
-    protected $adapter;
-
     public function __construct()
     {
         $this->disk = config('file-vault.disk');
@@ -109,7 +102,7 @@ class FileVault
 
     public function encryptCopy($sourceFile, $destFile = null)
     {
-        return self::encrypt($sourceFile, $destFile, false);
+        return $this->encrypt($sourceFile, $destFile, false);
     }
 
     /**
@@ -146,7 +139,7 @@ class FileVault
 
     public function decryptCopy($sourceFile, $destFile = null)
     {
-        return self::decrypt($sourceFile, $destFile, false);
+        return $this->decrypt($sourceFile, $destFile, false);
     }
 
     public function streamDecrypt($sourceFile)
@@ -164,33 +157,32 @@ class FileVault
     protected function getFilePath($file)
     {
         if ($this->isS3File()) {
-            return "s3://{$this->adapter->getBucket()}/{$file}";
+            $bucket = $this->storage()->getConfig()['bucket'];
+
+            // path() applies the disk's "root" prefix, if one is configured
+            return "s3://{$bucket}/".$this->storage()->path($file);
         }
 
-        return Storage::disk($this->disk)->path($file);
+        return $this->storage()->path($file);
     }
 
     protected function isS3File()
     {
-        return $this->disk == 's3';
+        return config("filesystems.disks.{$this->disk}.driver") === 's3';
     }
 
-    protected function setAdapter()
+    /**
+     * @return \Illuminate\Filesystem\FilesystemAdapter
+     */
+    protected function storage()
     {
-        if ($this->adapter) {
-            return;
-        }
-
-        $this->adapter = Storage::disk($this->disk)->getAdapter();
+        return Storage::disk($this->disk);
     }
 
     protected function registerServices()
     {
-        $this->setAdapter();
-
         if ($this->isS3File()) {
-            $client = $this->adapter->getClient();
-            $client->registerStreamWrapper();
+            $this->storage()->getClient()->registerStreamWrapper();
         }
     }
 }
