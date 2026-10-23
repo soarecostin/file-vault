@@ -5,7 +5,7 @@ All notable changes to `file-vault` will be documented in this file.
 ## 2.0.0 - 2026-10-22
 
 ### Added
-- Support for Laravel 10, 11, 12 and 13.
+- Support for Laravel 12 and 13.
 - Any disk using the `s3` driver now works, not only a disk named `s3`.
 - Tests that prove files encrypted with v1.x still decrypt.
 - GitHub Actions test matrix (replaces Travis CI).
@@ -15,7 +15,9 @@ All notable changes to `file-vault` will be documented in this file.
 - On S3 disks, the disk's `root` option is now applied to file paths, matching how Laravel's `Storage` resolves them.
 
 ### Removed
-- Support for PHP < 8.1 and Laravel < 10. Stay on 1.x for older versions.
+- Support for PHP < 8.2 and Laravel < 12. Stay on 1.x for older versions.
+  Laravel 10 and 11 are end-of-life, and Composer blocks installing them
+  because of unpatched security advisories.
 
 ### Upgrading from 1.x
 - The encrypted file format is unchanged: files encrypted with 1.x decrypt with 2.x, and the other way round.

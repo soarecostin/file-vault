@@ -13,7 +13,7 @@ With this package, you can encrypt and decrypt files of any size in your Laravel
 
 | file-vault | PHP  | Laravel        |
 |------------|------|----------------|
-| 2.x        | 8.1+ | 10, 11, 12, 13 |
+| 2.x        | 8.2+ | 12, 13         |
 | 1.x        | 7.2+ | 5.8 – 8        |
 
 Upgrading from 1.x? See the [changelog](CHANGELOG.md#200---2026-10-22). Files encrypted with 1.x decrypt with 2.x unchanged.
