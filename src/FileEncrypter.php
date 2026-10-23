@@ -35,7 +35,7 @@ class FileEncrypter
      * @param  string  $cipher
      * @return void
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function __construct($key, $cipher = 'AES-128-CBC')
     {
@@ -72,8 +72,8 @@ class FileEncrypter
     /**
      * Encrypts the source file and saves the result in a new file.
      *
-     * @param string $sourcePath  Path to file that should be encrypted
-     * @param string $destPath  File name where the encryped file should be written to.
+     * @param  string  $sourcePath  Path to file that should be encrypted
+     * @param  string  $destPath  File name where the encryped file should be written to.
      * @return bool
      */
     public function encrypt($sourcePath, $destPath)
@@ -99,6 +99,7 @@ class FileEncrypter
                 && $i + 1 < $numberOfChunks
             ) {
                 fseek($fpIn, 16 * self::FILE_ENCRYPTION_BLOCKS * $i);
+
                 continue;
             }
 
@@ -118,8 +119,8 @@ class FileEncrypter
     /**
      * Decrypts the source file and saves the result in a new file.
      *
-     * @param string $sourcePath   Path to file that should be decrypted
-     * @param string $destPath  File name where the decryped file should be written to.
+     * @param  string  $sourcePath  Path to file that should be decrypted
+     * @param  string  $destPath  File name where the decryped file should be written to.
      * @return bool
      */
     public function decrypt($sourcePath, $destPath)
@@ -145,6 +146,7 @@ class FileEncrypter
                 && $i + 1 < $numberOfChunks
             ) {
                 fseek($fpIn, 16 + 16 * (self::FILE_ENCRYPTION_BLOCKS + 1) * $i);
+
                 continue;
             }
 

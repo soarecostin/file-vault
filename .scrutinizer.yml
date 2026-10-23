@@ -17,3 +17,14 @@ checks:
         fix_identation_4spaces: true
         fix_doc_comments: true
 
+
+build:
+    image: default-jammy
+    environment:
+        php: 8.3
+    nodes:
+        analysis:
+            # Tests run on GitHub Actions; Scrutinizer only does code analysis
+            tests:
+                override:
+                    - php-scrutinizer-run

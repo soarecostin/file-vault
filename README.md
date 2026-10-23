@@ -2,8 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/soarecostin/file-vault.svg?style=flat-square)](https://packagist.org/packages/soarecostin/file-vault)
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/soarecostin/file-vault/master.svg?style=flat-square)](https://travis-ci.org/soarecostin/file-vault)
-[![Quality Score](https://img.shields.io/scrutinizer/g/soarecostin/file-vault.svg?style=flat-square)](https://scrutinizer-ci.com/g/soarecostin/file-vault)
+[![Tests](https://img.shields.io/github/actions/workflow/status/soarecostin/file-vault/tests.yml?branch=master&label=tests&style=flat-square)](https://github.com/soarecostin/file-vault/actions/workflows/tests.yml)
 [![StyleCI](https://styleci.io/repos/221933072/shield)](https://styleci.io/repos/221933072)
 [![Total Downloads](https://img.shields.io/packagist/dt/soarecostin/file-vault.svg?style=flat-square)](https://packagist.org/packages/soarecostin/file-vault)
 
@@ -12,7 +11,12 @@ With this package, you can encrypt and decrypt files of any size in your Laravel
 
 ## Installation and usage
 
-This package requires PHP 7.2 and Laravel 5.8 or higher.  
+| file-vault | PHP  | Laravel        |
+|------------|------|----------------|
+| 2.x        | 8.2+ | 12, 13         |
+| 1.x        | 7.2+ | 5.8 – 8        |
+
+Upgrading from 1.x? See the [changelog](CHANGELOG.md#200---2026-10-22). Files encrypted with 1.x decrypt with 2.x unchanged.
 
 You can install the package via composer:
 
@@ -86,6 +90,8 @@ You can also specify a different `disk`, just as you would normally with the Lar
 ``` php
 FileVault::disk('s3')->encrypt('file.txt');
 ```
+
+Any disk that uses the `s3` driver is supported (for example a disk named `private-s3`). Encrypting files on S3 requires `league/flysystem-aws-s3-v3` (^3.0), the same package Laravel itself needs for S3 disks.
 
 You can also specify a different name for the encrypted file by passing in a second parameter. The following example will search for `file.txt` into the `local` disk, save the encrypted file as `encrypted.txt` and delete the original `file.txt`:
 ``` php

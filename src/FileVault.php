@@ -2,6 +2,7 @@
 
 namespace SoareCostin\FileVault;
 
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -27,13 +28,6 @@ class FileVault
      * @var string
      */
     protected $cipher;
-
-    /**
-     * The storage adapter.
-     *
-     * @var string
-     */
-    protected $adapter;
 
     public function __construct()
     {
@@ -81,8 +75,8 @@ class FileVault
     /**
      * Encrypt the passed file and saves the result in a new file with ".enc" as suffix.
      *
-     * @param string $sourceFile Path to file that should be encrypted, relative to the storage disk specified
-     * @param string $destFile   File name where the encryped file should be written to, relative to the storage disk specified
+     * @param  string  $sourceFile  Path to file that should be encrypted, relative to the storage disk specified
+     * @param  string  $destFile  File name where the encryped file should be written to, relative to the storage disk specified
      * @return $this
      */
     public function encrypt($sourceFile, $destFile = null, $deleteSource = true)
@@ -109,15 +103,15 @@ class FileVault
 
     public function encryptCopy($sourceFile, $destFile = null)
     {
-        return self::encrypt($sourceFile, $destFile, false);
+        return $this->encrypt($sourceFile, $destFile, false);
     }
 
     /**
      * Dencrypt the passed file and saves the result in a new file, removing the
      * last 4 characters from file name.
      *
-     * @param string $sourceFile Path to file that should be decrypted
-     * @param string $destFile   File name where the decryped file should be written to.
+     * @param  string  $sourceFile  Path to file that should be decrypted
+     * @param  string  $destFile  File name where the decryped file should be written to.
      * @return $this
      */
     public function decrypt($sourceFile, $destFile = null, $deleteSource = true)
@@ -146,7 +140,7 @@ class FileVault
 
     public function decryptCopy($sourceFile, $destFile = null)
     {
-        return self::decrypt($sourceFile, $destFile, false);
+        return $this->decrypt($sourceFile, $destFile, false);
     }
 
     public function streamDecrypt($sourceFile)
@@ -164,33 +158,32 @@ class FileVault
     protected function getFilePath($file)
     {
         if ($this->isS3File()) {
-            return "s3://{$this->adapter->getBucket()}/{$file}";
+            $bucket = $this->storage()->getConfig()['bucket'];
+
+            // path() applies the disk's "root" prefix, if one is configured
+            return "s3://{$bucket}/".$this->storage()->path($file);
         }
 
-        return Storage::disk($this->disk)->path($file);
+        return $this->storage()->path($file);
     }
 
     protected function isS3File()
     {
-        return $this->disk == 's3';
+        return config("filesystems.disks.{$this->disk}.driver") === 's3';
     }
 
-    protected function setAdapter()
+    /**
+     * @return FilesystemAdapter
+     */
+    protected function storage()
     {
-        if ($this->adapter) {
-            return;
-        }
-
-        $this->adapter = Storage::disk($this->disk)->getAdapter();
+        return Storage::disk($this->disk);
     }
 
     protected function registerServices()
     {
-        $this->setAdapter();
-
         if ($this->isS3File()) {
-            $client = $this->adapter->getClient();
-            $client->registerStreamWrapper();
+            $this->storage()->getClient()->registerStreamWrapper();
         }
     }
 }
