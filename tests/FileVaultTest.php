@@ -2,8 +2,10 @@
 
 namespace SoareCostin\FileVault\Tests;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Storage;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use SoareCostin\FileVault\Facades\FileVault;
 use SoareCostin\FileVault\FileVaultServiceProvider;
 
@@ -12,8 +14,7 @@ class FileVaultTest extends TestCase
     /**
      * Get package providers.
      *
-     * @param  \Illuminate\Foundation\Application  $app
-     *
+     * @param  Application  $app
      * @return array
      */
     protected function getPackageProviders($app)
@@ -26,8 +27,7 @@ class FileVaultTest extends TestCase
     /**
      * Get package aliases.
      *
-     * @param  \Illuminate\Foundation\Application  $app
-     *
+     * @param  Application  $app
      * @return array
      */
     protected function getPackageAliases($app)
@@ -40,7 +40,7 @@ class FileVaultTest extends TestCase
     /**
      * Define environment setup.
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param  Application  $app
      * @return void
      */
     protected function getEnvironmentSetUp($app)
@@ -250,7 +250,7 @@ class FileVaultTest extends TestCase
      * Files encrypted with v1.x must still decrypt with this version.
      * The fixtures were created with file-vault v1.2.0.
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('v1CipherProvider')]
+    #[DataProvider('v1CipherProvider')]
     public function test_it_decrypts_files_encrypted_with_v1($cipher, $keyLength)
     {
         $fixtures = __DIR__.'/fixtures';
@@ -293,7 +293,7 @@ class FileVaultTest extends TestCase
         $this->assertContains('s3', stream_get_wrappers());
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         // Cleanup the storage dir
         array_map('unlink', glob(__DIR__.'/../storage/app/*.*'));
